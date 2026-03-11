@@ -1,0 +1,32 @@
+name: "Validate PR Title"
+
+on:
+  pull_request:
+    types:
+      - opened
+      - edited
+      - synchronize
+
+jobs:
+  check-title:
+    runs-on: runner-small
+    steps:
+      - name: Validate PR title format
+        env:
+          PR_TITLE: ${{ github.event.pull_request.title }}
+        run: |
+          if ! echo "$PR_TITLE" | grep -E '^(IMON-[0-9]+|IMONF-[0-9]+|IMONFLASH-[0-9]+|NO-ISSUE:?) .+$'; then
+            echo "❌ PR title does not match required format"
+            echo ""
+            echo "Expected format: <TICKET-ID> <Description>"
+            echo "Examples:"
+            echo "  - IMON-123 Add new feature"
+            echo "  - IMONF-456 Fix bug in authentication"
+            echo "  - IMONFLASH-789 Update documentation"
+            echo "  - NO-ISSUE Fix typo"
+            echo "  - NO-ISSUE: Update readme"
+            echo ""
+            echo "Your title: $PR_TITLE"
+            exit 1
+          fi
+          echo "✅ PR title format is valid"
