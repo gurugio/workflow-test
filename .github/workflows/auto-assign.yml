@@ -11,6 +11,7 @@ jobs:
       pull-requests: write
     steps:
       - name: Assign author to PR
-        run: gh pr edit ${{ github.event.pull_request.number }} --add-assignee "${{ github.event.pull_request.user.login }}"
+        # We use the github context directly to ensure the CLI has the right URL
+        run: gh pr edit ${{ github.event.pull_request.number }} --add-assignee "${{ github.event.pull_request.user.login }}" --repo ${{ github.repository }}
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
