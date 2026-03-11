@@ -9,7 +9,7 @@ on:
 
 jobs:
   check-title:
-    runs-on: runner-small
+    runs-on: ubuntu-latest
     steps:
       - name: Validate PR title format
         env:
