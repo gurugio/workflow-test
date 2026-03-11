@@ -1,4 +1,4 @@
-name: Auto Assign PR Author
+name: Auto Assign PR Creator as Assignee
 
 on:
   pull_request:
@@ -6,12 +6,11 @@ on:
 
 jobs:
   assign-author:
-    runs-on: ubuntu-latest
+    runs-on: runner-small
     permissions:
       pull-requests: write
     steps:
-      - name: Assign author to PR
-        # We use the github context directly to ensure the CLI has the right URL
-        run: gh pr edit ${{ github.event.pull_request.number }} --add-assignee "${{ github.event.pull_request.user.login }}" --repo ${{ github.repository }}
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Assign PR creator
+        uses: toshimaru/auto-author-assign@v1.6.2
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
